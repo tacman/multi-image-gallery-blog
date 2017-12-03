@@ -1,29 +1,29 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": "^7.0.8",
-        "league/glide": "^1.1@dev",
-        "pda/pheanstalk": "^3.1@dev",
+        "league/glide": "^1.1",
+        "pda/pheanstalk": "^3.1",
         "ramsey/uuid-doctrine": "^1.4",
-        "sensio/framework-extra-bundle": "^4.0@dev",
-        "symfony/asset": "3.4.x-dev",
-        "symfony/form": "^4.1@dev",
-        "symfony/framework-bundle": "^3.3",
-        "symfony/monolog-bundle": "^3.0@dev",
+        "sensio/framework-extra-bundle": "^4.0",
+        "symfony/asset": "^4.0",
+        "symfony/form": "^4.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/monolog-bundle": "^3.0",
         "symfony/orm-pack": "^1.0",
-        "symfony/security-bundle": "^3.3",
-        "symfony/twig-bundle": "^3.4",
-        "symfony/validator": "3.4.x-dev",
-        "symfony/yaml": "^3.3"
+        "symfony/security-bundle": "^4.0",
+        "symfony/twig-bundle": "^4.0",
+        "symfony/validator": "^4.0",
+        "symfony/yaml": "^4.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^2.4@dev",
         "fzaninotto/faker": "^1.8@dev",
         "phpunit/phpunit": "^6.5@dev",
-        "symfony/debug-bundle": "3.4.x-dev",
-        "symfony/dotenv": "^3.3",
+        "symfony/debug-bundle": "^4.0",
+        "symfony/dotenv": "^4.0",
         "symfony/flex": "^1.0"
     },
     "config": {
@@ -44,7 +44,6 @@
     },
     "scripts": {
         "auto-scripts": {
-            "make cache-warmup": "script",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
             "cache:clear": "symfony-cmd"
         },

@@ -215,9 +215,6 @@
     "symfony/cache": {
         "version": "4.1-dev"
     },
-    "symfony/class-loader": {
-        "version": "3.4-dev"
-    },
     "symfony/config": {
         "version": "4.1-dev"
     },
@@ -315,9 +312,6 @@
         "version": "1.6-dev"
     },
     "symfony/polyfill-mbstring": {
-        "version": "1.6-dev"
-    },
-    "symfony/polyfill-php70": {
         "version": "1.6-dev"
     },
     "symfony/polyfill-php72": {

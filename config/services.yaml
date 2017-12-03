@@ -33,6 +33,7 @@ services:
         public: true
 
     App\Service\FileManager:
+      public: true
       arguments:
         $path: '%kernel.project_dir%/var/uploads'
 
