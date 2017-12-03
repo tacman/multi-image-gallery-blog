@@ -7,7 +7,7 @@ use App\Entity\Image;
 use App\Event\GalleryCreatedEvent;
 use App\Service\FileManager;
 use App\Service\UserManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -33,7 +33,7 @@ class UploadController
     /** @var FileManager */
     private $fileManager;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     private $em;
 
     /** @var  UserManager */
@@ -47,7 +47,7 @@ class UploadController
         FlashBagInterface $flashBag,
         RouterInterface $router,
         FileManager $fileManager,
-        EntityManager $em,
+        EntityManagerInterface $em,
         UserManager $userManager,
         EventDispatcherInterface $eventDispatcher
     ) {

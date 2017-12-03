@@ -11,4 +11,7 @@
 /.idea
 /.DS_Store
 /**/.DS_Store
-phpunit.xml
+
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###

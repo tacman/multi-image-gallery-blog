@@ -6,6 +6,7 @@ use App\Entity\Gallery;
 use App\Entity\Image;
 use App\Event\GalleryCreatedEvent;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class GalleryEventSubscriber implements EventSubscriberInterface
@@ -13,10 +14,10 @@ class GalleryEventSubscriber implements EventSubscriberInterface
     /** @var  JobQueueFactory */
     private $jobQueueFactory;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(JobQueueFactory $jobQueueFactory, EntityManager $entityManager)
+    public function __construct(JobQueueFactory $jobQueueFactory, EntityManagerInterface $entityManager)
     {
         $this->jobQueueFactory = $jobQueueFactory;
         $this->entityManager = $entityManager;

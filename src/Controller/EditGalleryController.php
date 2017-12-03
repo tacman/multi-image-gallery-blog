@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Form\EditGalleryType;
 use App\Service\UserManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,7 +19,7 @@ use Twig_Environment;
 
 class EditGalleryController
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var  FormFactoryInterface */
@@ -38,7 +38,7 @@ class EditGalleryController
     private $userManager;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         FormFactoryInterface $formFactory,
         FlashBagInterface $flashBag,
         RouterInterface $router,

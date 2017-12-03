@@ -9,6 +9,7 @@
         "ramsey/uuid-doctrine": "^1.4",
         "sensio/framework-extra-bundle": "^4.0@dev",
         "symfony/asset": "3.4.x-dev",
+        "symfony/form": "^4.1@dev",
         "symfony/framework-bundle": "^3.3",
         "symfony/monolog-bundle": "^3.0@dev",
         "symfony/orm-pack": "^1.0",
@@ -44,7 +45,8 @@
     "scripts": {
         "auto-scripts": {
             "make cache-warmup": "script",
-            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
+            "cache:clear": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts",

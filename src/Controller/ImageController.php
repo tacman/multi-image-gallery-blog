@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Service\FileManager;
 use App\Service\ImageResizer;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ImageController extends Controller
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     private $em;
 
     /** @var  FileManager */
@@ -23,7 +23,7 @@ class ImageController extends Controller
     /** @var  ImageResizer */
     private $imageResizer;
 
-    public function __construct(EntityManager $em, FileManager $fileManager, ImageResizer $imageResizer)
+    public function __construct(EntityManagerInterface $em, FileManager $fileManager, ImageResizer $imageResizer)
     {
         $this->em = $em;
         $this->fileManager = $fileManager;

@@ -3,10 +3,10 @@
 namespace App\Service;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,7 +20,7 @@ class UserManager
     /** @var  UserPasswordEncoderInterface */
     private $encoder;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     private $em;
 
     /** @var  EntityRepository */
@@ -32,15 +32,15 @@ class UserManager
     /** @var  SessionInterface */
     private $session;
 
-    /** @var  EventDispatcher */
+    /** @var  EventDispatcherInterface */
     private $eventDispatcher;
 
     public function __construct(
         UserPasswordEncoderInterface $encoder,
-        EntityManager $em,
+        EntityManagerInterface $em,
         TokenStorageInterface $tokenStorage,
         SessionInterface $session,
-        EventDispatcher $eventDispatcher
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->encoder = $encoder;
         $this->em = $em;
@@ -83,7 +83,7 @@ class UserManager
     public function save(User $user)
     {
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
     }
 
     public function register(array $data)
