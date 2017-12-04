@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Gallery;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +17,10 @@ class HomeController
     /** @var  Twig_Environment */
     private $twig;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     private $em;
 
-    public function __construct(Twig_Environment $twig, EntityManager $em)
+    public function __construct(Twig_Environment $twig, EntityManagerInterface $em)
     {
         $this->twig = $twig;
         $this->em = $em;

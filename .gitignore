@@ -2,6 +2,7 @@
 .env
 /public/bundles/
 /var/*
+!/var/placeholder.jpg
 !/var/demo-data/
 !/var/demo-data/sample-images/
 /vendor/
@@ -10,4 +11,7 @@
 /.idea
 /.DS_Store
 /**/.DS_Store
-phpunit.xml
+
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###

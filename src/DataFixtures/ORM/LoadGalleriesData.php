@@ -4,6 +4,8 @@ namespace App\DataFixtures\ORM;
 
 use App\Entity\Gallery;
 use App\Entity\Image;
+use App\Service\FileManager;
+use App\Service\ImageResizer;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -14,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class LoadGalleriesData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
 {
-    const COUNT = 1000;
+    const COUNT = 100;
 
     /** @var  ContainerInterface */
     private $container;
@@ -22,6 +24,8 @@ class LoadGalleriesData extends AbstractFixture implements ContainerAwareInterfa
     public function load(ObjectManager $manager)
     {
         $manager->getConnection()->getConfiguration()->setSQLLogger(null);
+        $imageResizer = $this->container->get(ImageResizer::class);
+        $fileManager = $this->container->get(FileManager::class);
 
         $faker = Factory::create();
         $batchSize = 100;
@@ -54,6 +58,13 @@ MD;
                 $image->setDescription($description);
                 $gallery->addImage($image);
                 $manager->persist($image);
+
+                $fullPath = $fileManager->getFilePath($image->getFilename());
+                if (false === empty($fullPath)) {
+                    foreach ($imageResizer->getSupportedWidths() as $width) {
+                        $imageResizer->getResizedPath($fullPath, $width, true);
+                    }
+                }
             }
 
             $manager->persist($gallery);

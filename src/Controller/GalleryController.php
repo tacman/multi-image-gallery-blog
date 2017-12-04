@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Service\UserManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,13 +15,13 @@ class GalleryController
     /** @var  Twig_Environment */
     private $twig;
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerInterface */
     private $em;
 
     /** @var  UserManager */
     private $userManager;
 
-    public function __construct(Twig_Environment $twig, EntityManager $em, UserManager $userManager)
+    public function __construct(Twig_Environment $twig, EntityManagerInterface $em, UserManager $userManager)
     {
         $this->twig = $twig;
         $this->em = $em;
