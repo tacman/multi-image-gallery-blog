@@ -81,7 +81,7 @@ class UserManager
 
     public function createUser()
     {
-        $uuid = Uuid::v4();
+        $uuid = Uuid::v7();
 
         return new User($uuid);
     }

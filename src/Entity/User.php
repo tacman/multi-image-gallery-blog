@@ -2,53 +2,45 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @ORM\Table(name="users")
- * @ORM\Entity
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'users')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @var Uuid
-     *
-     * @ORM\Id
-     * @ORM\Column(type=UuidType::NAME, unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="doctrine.ulid_generator")
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    public ?Uuid $id;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $password;
+    #[ORM\Column(type: 'string', length: 64)]
+    private string $password;
 
-    private $plainPassword;
+    private string $plainPassword;
 
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 60, unique: true)]
     private $email;
 
-    /**
-     * @var array
-     * @ORM\Column(type="array")
-     */
-    private $roles = [];
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    private $isActive;
+    #[ORM\Column(type: 'boolean', name: 'is_active')]
+    private bool $isActive;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Gallery::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    private Collection $galleries;
 
     public function __construct(Uuid $id)
     {
+        $this->galleries = new ArrayCollection();
         $this->isActive = true;
         $this->id = $id;
     }
@@ -102,7 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 

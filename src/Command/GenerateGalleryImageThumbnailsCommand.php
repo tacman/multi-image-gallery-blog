@@ -5,12 +5,12 @@ namespace App\Command;
 use App\Entity\Gallery;
 use App\Service\FileManager;
 use App\Service\ImageResizer;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateGalleryImageThumbnailsCommand extends ContainerAwareCommand
+class GenerateGalleryImageThumbnailsCommand extends Command
 {
     /** @var  OutputInterface */
     private $output;

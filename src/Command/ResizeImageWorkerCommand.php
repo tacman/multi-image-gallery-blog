@@ -5,15 +5,19 @@ namespace App\Command;
 use App\Entity\Image;
 use App\Service\FileManager;
 use App\Service\ImageResizer;
-use App\Service\JobQueueFactory;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ResizeImageWorkerCommand extends ContainerAwareCommand
+class ResizeImageWorkerCommand extends Command
 {
     /** @var  OutputInterface */
     private $output;
+
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+    }
 
     protected function configure()
     {
@@ -24,19 +28,6 @@ class ResizeImageWorkerCommand extends ContainerAwareCommand
     {
         $this->output = $output;
         $output->writeln(sprintf('Started worker'));
-
-        $queue = $this->getContainer()
-            ->get(JobQueueFactory::class)
-            ->createQueue()
-            ->watch(JobQueueFactory::QUEUE_IMAGE_RESIZE);
-
-        $job = $queue->reserve(60 * 5);
-
-        if (false === $job) {
-            $this->output->writeln('Timed out');
-
-            return;
-        }
 
         try {
             $this->resizeImage($job->getData());

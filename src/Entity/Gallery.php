@@ -2,116 +2,76 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="galleries")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'galleries')]
 class Gallery
 {
-    /**
-     * @var Uuid
-     *
-     * @ORM\Id
-     * @ORM\Column(type=UuidType::NAME, unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="doctrine.ulid_generator")
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    public ?Uuid $id;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $name;
+    #[ORM\Column(type: 'string', nullable: false)]
+    private string $name;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private string $description;
 
-    /**
-     * @var Collection
-     * @ORM\OneToMany(targetEntity="Image", orphanRemoval=true, cascade={"persist", "remove"}, mappedBy="gallery")
-     */
-    private $images;
+    #[ORM\Column(type: 'datetime', nullable: false)]
+    private \DateTime $createdAt;
 
-    /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="galleries")
-     * @ORM\JoinColumn(referencedColumnName="id", name="user_id", nullable=false)
-     */
-    private $user;
+    #[ORM\OneToMany(mappedBy: 'gallery', targetEntity: Image::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $images;
 
-    /**
-     * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
-     */
-    private $createdAt;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'galleries')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    private User $user;
 
-    public function __construct(UuidInterface $id)
+    public function __construct(Uuid $id)
     {
         $this->id = $id;
         $this->images = new ArrayCollection();
-        $this->createdAt = new DateTime();
+        $this->createdAt = new \DateTime();
     }
 
-    /**
-     * @return Uuid
-     */
-    public function getId()
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getImages()
+    public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(Image $image)
+    public function addImage(Image $image): void
     {
         if (false === $this->images->contains($image)) {
             $image->setGallery($this);
@@ -119,38 +79,29 @@ class Gallery
         }
     }
 
-    public function removeImage(Image $image)
+    public function removeImage(Image $image): void
     {
         if (true === $this->images->contains($image)) {
             $this->images->removeElement($image);
         }
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    public function isOwner(User $user)
+    public function isOwner(User $user): bool
     {
         return $this->user === $user;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }

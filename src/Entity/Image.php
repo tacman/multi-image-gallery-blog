@@ -6,47 +6,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="images")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'images')]
 class Image
 {
-    /**
-     * @var Uuid
-     * @ORM\Id
-     * @ORM\Column(type=UuidType::NAME, unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="doctrine.ulid_generator")
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    public ?Uuid $id;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $originalFilename;
+    #[ORM\Column(type: 'string', nullable: false)]
+    private string $originalFilename;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $filename;
+    #[ORM\Column(type: 'string', nullable: false)]
+    private string $filename;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description;
 
-    /**
-     * @var Gallery
-     * @ORM\ManyToOne(targetEntity="Gallery", inversedBy="images")
-     * @ORM\JoinColumn(referencedColumnName="id", name="gallery_id", nullable=true)
-     */
-    private $gallery;
+    #[ORM\ManyToOne(targetEntity: Gallery::class, inversedBy: 'images')]
+    #[ORM\JoinColumn(name: 'gallery_id', referencedColumnName: 'id', nullable: true)]
+    private Gallery $gallery;
 
-    public function __construct(UuidInterface $id, $originalFilename, $filename)
+    public function __construct(Uuid $id, $originalFilename, $filename)
     {
         $this->id = $id;
         $this->originalFilename = $originalFilename;
@@ -85,39 +68,27 @@ class Image
         return $this->filename;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    public function canEdit(User $user)
+    public function canEdit(User $user): bool
     {
         return $this->getGallery()->isOwner($user);
     }
 
-    /**
-     * @return Gallery
-     */
-    public function getGallery()
+    public function getGallery(): Gallery
     {
         return $this->gallery;
     }
 
-    /**
-     * @param Gallery $gallery
-     */
-    public function setGallery(Gallery $gallery)
+    public function setGallery(Gallery $gallery): void
     {
         $this->gallery = $gallery;
     }

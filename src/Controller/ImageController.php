@@ -37,7 +37,11 @@ class ImageController extends AbstractController
     {
         $idFragments = explode('--', $id);
         $id = $idFragments[0];
-        $size = (int)$idFragments[1] ?? null;
+        $size = null;
+
+        if ($idFragments[1] ?? null) {
+            $size = (int)$idFragments[1];
+        }
 
         if (false === is_null($size) && false === $this->imageResizer->isSupportedSize($size)) {
             throw new NotFoundHttpException('Image not found');

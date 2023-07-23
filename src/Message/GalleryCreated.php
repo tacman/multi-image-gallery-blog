@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Event;
+namespace App\Message;
 
-use Symfony\Contracts\EventDispatcher\Event;
-
-class GalleryCreatedEvent extends Event
+class GalleryCreated
 {
     /** @var  string */
     private $galleryId;

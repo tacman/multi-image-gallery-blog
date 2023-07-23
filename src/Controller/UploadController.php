@@ -4,18 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Entity\Image;
-use App\Event\GalleryCreatedEvent;
+use App\Message\GalleryCreated;
 use App\Service\FileManager;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Uid\Uuid;
 
 class UploadController extends AbstractController
 {
@@ -31,22 +32,22 @@ class UploadController extends AbstractController
     /** @var  UserManager */
     private $userManager;
 
-    /** @var  EventDispatcherInterface */
-    private $eventDispatcher;
+    /** @var  MessageBusInterface */
+    private $bus;
 
     public function __construct(
-        RouterInterface          $router,
-        FileManager              $fileManager,
-        EntityManagerInterface   $em,
-        UserManager              $userManager,
-        EventDispatcherInterface $eventDispatcher
+        RouterInterface        $router,
+        FileManager            $fileManager,
+        EntityManagerInterface $em,
+        UserManager            $userManager,
+        MessageBusInterface    $bus
     )
     {
         $this->router = $router;
         $this->fileManager = $fileManager;
         $this->em = $em;
         $this->userManager = $userManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->bus = $bus;
     }
 
     /**
@@ -67,20 +68,20 @@ class UploadController extends AbstractController
         // @todo access control
         // @todo input validation
 
-        $gallery = new Gallery(Uuid::getFactory()->uuid4());
-        $gallery->setName($request->get('name', null));
-        $gallery->setDescription($request->get('description', null));
+        $gallery = new Gallery(Uuid::v7());
+        $gallery->setName($request->get('name'));
+        $gallery->setDescription($request->get('description'));
         $gallery->setUser($this->userManager->getCurrentUser());
         $files = $request->files->get('file');
 
         /** @var UploadedFile $file */
         foreach ($files as $file) {
             $filename = $file->getClientOriginalName();
-            $filepath = Uuid::getFactory()->uuid4()->toString() . '.' . $file->getClientOriginalExtension();
-            $movedFile = $this->fileManager->upload($file, $filepath);
+            $filepath = Uuid::v7() . '.' . $file->getClientOriginalExtension();
+            $this->fileManager->upload($file, $filepath);
 
             $image = new Image(
-                Uuid::getFactory()->uuid4(),
+                Uuid::v7(),
                 $filename,
                 $filepath
             );
@@ -91,9 +92,8 @@ class UploadController extends AbstractController
         $this->em->persist($gallery);
         $this->em->flush();
 
-        $this->eventDispatcher->dispatch(
-            GalleryCreatedEvent::class,
-            new GalleryCreatedEvent($gallery->getId())
+        $this->bus->dispatch(
+            new GalleryCreated($gallery->getId())
         );
 
         $this->addFlash('success', 'Gallery created! Images are now being processed.');
