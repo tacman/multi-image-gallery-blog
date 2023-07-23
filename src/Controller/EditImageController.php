@@ -7,18 +7,17 @@ use App\Entity\Image;
 use App\Form\EditImageType;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Twig_Environment;
 
-class EditImageController
+class EditImageController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $em;
@@ -26,31 +25,22 @@ class EditImageController
     /** @var  FormFactoryInterface */
     private $formFactory;
 
-    /** @var  FlashBagInterface */
-    private $flashBag;
-
     /** @var  RouterInterface */
     private $router;
-
-    /** @var  Twig_Environment */
-    private $twig;
 
     /** @var  UserManager */
     private $userManager;
 
     public function __construct(
         EntityManagerInterface $em,
-        FormFactoryInterface $formFactory,
-        FlashBagInterface $flashBag,
-        RouterInterface $router,
-        Twig_Environment $twig,
-        UserManager $userManager
-    ) {
+        FormFactoryInterface   $formFactory,
+        RouterInterface        $router,
+        UserManager            $userManager
+    )
+    {
         $this->em = $em;
         $this->formFactory = $formFactory;
-        $this->flashBag = $flashBag;
         $this->router = $router;
-        $this->twig = $twig;
         $this->userManager = $userManager;
     }
 
@@ -75,7 +65,7 @@ class EditImageController
         $this->em->remove($image);
         $this->em->flush();
 
-        $this->flashBag->add('success', 'Image deleted');
+        $this->addFlash('success', 'Image deleted');
 
         return new RedirectResponse($this->router->generate('gallery.single-gallery', ['id' => $gallery->getId()]));
     }
@@ -97,7 +87,7 @@ class EditImageController
 
         $imageDto = [
             'originalFilename' => $image->getOriginalFilename(),
-            'description'      => $image->getDescription(),
+            'description' => $image->getDescription(),
         ];
 
         $form = $this->formFactory->create(EditImageType::class, $imageDto);
@@ -108,14 +98,14 @@ class EditImageController
             $image->setOriginalFilename($form->get('originalFilename')->getData());
             $this->em->flush();
 
-            $this->flashBag->add('success', 'Image updated');
+            $this->addFlash('success', 'Image updated');
 
             return new RedirectResponse($this->router->generate('image.edit', ['id' => $image->getId()]));
         }
 
-        $view = $this->twig->render('image/edit-image.html.twig', [
+        $view = $this->renderView('image/edit-image.html.twig', [
             'image' => $image,
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
         ]);
 
         return new Response($view);

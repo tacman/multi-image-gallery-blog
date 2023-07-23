@@ -28,12 +28,7 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\Service\:
-        resource: '../src/Service/*'
-        public: true
-
     App\Service\FileManager:
-      public: true
       arguments:
         $path: '%kernel.project_dir%/var/uploads'
 

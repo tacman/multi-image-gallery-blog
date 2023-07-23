@@ -6,50 +6,40 @@ use App\Entity\Gallery;
 use App\Form\EditGalleryType;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Twig_Environment;
 
-class EditGalleryController
+class EditGalleryController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var  FormFactoryInterface */
+    /** @var FormFactoryInterface */
     private $formFactory;
 
-    /** @var  FlashBagInterface */
-    private $flashBag;
-
-    /** @var  RouterInterface */
+    /** @var RouterInterface */
     private $router;
 
-    /** @var  Twig_Environment */
-    private $twig;
-
-    /** @var  UserManager */
+    /** @var UserManager */
     private $userManager;
 
     public function __construct(
         EntityManagerInterface $em,
-        FormFactoryInterface $formFactory,
-        FlashBagInterface $flashBag,
-        RouterInterface $router,
-        Twig_Environment $twig,
-        UserManager $userManager
-    ) {
+        FormFactoryInterface   $formFactory,
+        RouterInterface        $router,
+        UserManager            $userManager
+    )
+    {
         $this->em = $em;
         $this->formFactory = $formFactory;
-        $this->flashBag = $flashBag;
         $this->router = $router;
-        $this->twig = $twig;
         $this->userManager = $userManager;
     }
 
@@ -71,7 +61,7 @@ class EditGalleryController
         $this->em->remove($gallery);
         $this->em->flush();
 
-        $this->flashBag->add('success', 'Gallery deleted');
+        $this->addFlash('success', 'Gallery deleted');
 
         return new RedirectResponse($this->router->generate('home'));
     }
@@ -92,7 +82,7 @@ class EditGalleryController
         }
 
         $galleryDto = [
-            'name'        => $gallery->getName(),
+            'name' => $gallery->getName(),
             'description' => $gallery->getDescription(),
         ];
 
@@ -104,14 +94,14 @@ class EditGalleryController
             $gallery->setName($form->get('name')->getData());
             $this->em->flush();
 
-            $this->flashBag->add('success', 'Gallery updated');
+            $this->addFlash('success', 'Gallery updated');
 
             return new RedirectResponse($this->router->generate('gallery.edit', ['id' => $gallery->getId()]));
         }
 
-        $view = $this->twig->render('gallery/edit-gallery.html.twig', [
+        $view = $this->renderView('gallery/edit-gallery.html.twig', [
             'gallery' => $gallery,
-            'form'    => $form->createView(),
+            'form' => $form->createView(),
         ]);
 
         return new Response($view);

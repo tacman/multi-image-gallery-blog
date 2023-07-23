@@ -4,17 +4,19 @@ namespace App\Twig;
 
 use App\Entity\Gallery;
 use App\Repository\GalleryRepository;
-use Twig_Extension;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class SingleGalleryPageModulesTwigExtension extends Twig_Extension
+class SingleGalleryPageModulesTwigExtension extends AbstractExtension
 {
-    /** @var  \Twig_Environment */
+    /** @var  Environment */
     private $twig;
 
     /** @var  GalleryRepository */
     private $repository;
 
-    public function __construct(\Twig_Environment $twig, GalleryRepository $repository)
+    public function __construct(Environment $twig, GalleryRepository $repository)
     {
         $this->twig = $twig;
         $this->repository = $repository;
@@ -23,8 +25,8 @@ class SingleGalleryPageModulesTwigExtension extends Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_Function('renderRelatedGalleries', [$this, 'renderRelatedGalleries'], ['is_safe' => ['html']]),
-            new \Twig_Function('renderNewestGalleries', [$this, 'renderNewestGalleries'], ['is_safe' => ['html']]),
+            new TwigFunction('renderRelatedGalleries', [$this, 'renderRelatedGalleries'], ['is_safe' => ['html']]),
+            new TwigFunction('renderNewestGalleries', [$this, 'renderNewestGalleries'], ['is_safe' => ['html']]),
         ];
     }
 

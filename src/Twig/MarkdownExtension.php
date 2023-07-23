@@ -3,16 +3,16 @@
 namespace App\Twig;
 
 use Parsedown;
-use Twig_Extension;
-use Twig_SimpleFilter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
-class MarkdownExtension extends Twig_Extension
+class MarkdownExtension extends AbstractExtension
 {
 
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('markdown', [$this, 'renderMarkdownToHtml']),
+            new TwigFilter('markdown', [$this, 'renderMarkdownToHtml']),
         ];
     }
 

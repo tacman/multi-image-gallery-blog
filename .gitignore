@@ -3,8 +3,8 @@
 /public/bundles/
 /var/*
 !/var/placeholder.jpg
-!/var/demo-data/
-!/var/demo-data/sample-images/
+!/articles/demo-data/
+!/articles/demo-data/sample-images/
 /vendor/
 ###< symfony/framework-bundle ###
 

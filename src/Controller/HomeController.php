@@ -4,25 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig_Environment;
 
-class HomeController
+class HomeController extends AbstractController
 {
     const PER_PAGE = 12;
-
-    /** @var  Twig_Environment */
-    private $twig;
 
     /** @var  EntityManagerInterface */
     private $em;
 
-    public function __construct(Twig_Environment $twig, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->twig = $twig;
         $this->em = $em;
     }
 
@@ -32,7 +28,7 @@ class HomeController
     public function homeAction()
     {
         $galleries = $this->em->getRepository(Gallery::class)->findBy([], ['createdAt' => 'DESC'], self::PER_PAGE);
-        $view = $this->twig->render('home.html.twig', [
+        $view = $this->renderView('home.html.twig', [
             'galleries' => $galleries,
         ]);
 
@@ -55,7 +51,7 @@ class HomeController
         $offset = ($page - 1) * self::PER_PAGE;
         $galleries = $this->em->getRepository(Gallery::class)->findBy([], ['createdAt' => 'DESC'], 12, $offset);
 
-        $view = $this->twig->render('partials/home-galleries-lazy-load.html.twig', [
+        $view = $this->renderView('partials/home-galleries-lazy-load.html.twig', [
             'galleries' => $galleries,
         ]);
 

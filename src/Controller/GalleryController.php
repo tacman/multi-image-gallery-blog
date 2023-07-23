@@ -5,25 +5,21 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig_Environment;
 
-class GalleryController
+class GalleryController extends AbstractController
 {
-    /** @var  Twig_Environment */
-    private $twig;
-
     /** @var  EntityManagerInterface */
     private $em;
 
     /** @var  UserManager */
     private $userManager;
 
-    public function __construct(Twig_Environment $twig, EntityManagerInterface $em, UserManager $userManager)
+    public function __construct(EntityManagerInterface $em, UserManager $userManager)
     {
-        $this->twig = $twig;
         $this->em = $em;
         $this->userManager = $userManager;
     }
@@ -44,7 +40,7 @@ class GalleryController
             $canEdit = $gallery->isOwner($currentUser);
         }
 
-        $view = $this->twig->render('gallery/single-gallery.html.twig', [
+        $view = $this->renderView('gallery/single-gallery.html.twig', [
             'gallery' => $gallery,
             'canEdit' => $canEdit,
         ]);

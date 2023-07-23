@@ -8,25 +8,17 @@ use App\Event\GalleryCreatedEvent;
 use App\Service\FileManager;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Ramsey\Uuid\Uuid;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Twig_Environment;
 
-class UploadController
+class UploadController extends AbstractController
 {
-    /** @var  Twig_Environment */
-    private $twig;
-
-    /** @var  FlashBagInterface */
-    private $flashBag;
-
     /** @var  RouterInterface */
     private $router;
 
@@ -43,16 +35,13 @@ class UploadController
     private $eventDispatcher;
 
     public function __construct(
-        Twig_Environment $twig,
-        FlashBagInterface $flashBag,
-        RouterInterface $router,
-        FileManager $fileManager,
-        EntityManagerInterface $em,
-        UserManager $userManager,
+        RouterInterface          $router,
+        FileManager              $fileManager,
+        EntityManagerInterface   $em,
+        UserManager              $userManager,
         EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->twig = $twig;
-        $this->flashBag = $flashBag;
+    )
+    {
         $this->router = $router;
         $this->fileManager = $fileManager;
         $this->em = $em;
@@ -65,7 +54,7 @@ class UploadController
      */
     public function renderUploadScreenAction(Request $request)
     {
-        $view = $this->twig->render('gallery/upload.html.twig');
+        $view = $this->renderView('gallery/upload.html.twig');
 
         return new Response($view);
     }
@@ -107,10 +96,10 @@ class UploadController
             new GalleryCreatedEvent($gallery->getId())
         );
 
-        $this->flashBag->add('success', 'Gallery created! Images are now being processed.');
+        $this->addFlash('success', 'Gallery created! Images are now being processed.');
 
         return new JsonResponse([
-            'success'     => true,
+            'success' => true,
             'redirectUrl' => $this->router->generate(
                 'gallery.single-gallery',
                 ['id' => $gallery->getId()]

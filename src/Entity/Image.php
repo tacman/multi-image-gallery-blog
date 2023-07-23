@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @ORM\Entity
@@ -15,9 +15,9 @@ class Image
     /**
      * @var Uuid
      * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\Column(type=UuidType::NAME, unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\CustomIdGenerator(class="doctrine.ulid_generator")
      */
     public $id;
 
@@ -101,6 +101,11 @@ class Image
         $this->description = $description;
     }
 
+    public function canEdit(User $user)
+    {
+        return $this->getGallery()->isOwner($user);
+    }
+
     /**
      * @return Gallery
      */
@@ -115,11 +120,6 @@ class Image
     public function setGallery(Gallery $gallery)
     {
         $this->gallery = $gallery;
-    }
-
-    public function canEdit(User $user)
-    {
-        return $this->getGallery()->isOwner($user);
     }
 
 }

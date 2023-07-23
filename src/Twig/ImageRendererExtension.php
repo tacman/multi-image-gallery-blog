@@ -5,11 +5,10 @@ namespace App\Twig;
 use App\Entity\Image;
 use App\Service\ImageResizer;
 use Symfony\Component\Routing\RouterInterface;
-use Twig_Extension;
-use Twig_SimpleFilter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
-
-class ImageRendererExtension extends Twig_Extension
+class ImageRendererExtension extends AbstractExtension
 {
     /** @var  RouterInterface */
     private $router;
@@ -22,8 +21,8 @@ class ImageRendererExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('getImageUrl', [$this, 'getImageUrl']),
-            new Twig_SimpleFilter('getImageSrcset', [$this, 'getImageSrcset']),
+            new TwigFilter('getImageUrl', [$this, 'getImageUrl']),
+            new TwigFilter('getImageSrcset', [$this, 'getImageSrcset']),
         ];
     }
 

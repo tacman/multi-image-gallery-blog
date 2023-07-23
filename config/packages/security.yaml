@@ -6,9 +6,8 @@ security:
                 class: App\Entity\User
                 property: email
 
-    encoders:
-        App\Entity\User:
-            algorithm: bcrypt
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
 
     firewalls:
@@ -19,7 +18,6 @@ security:
 
         main:
             provider: db_provider
-            anonymous: ~
             form_login:
                 login_path: login
                 check_path: login

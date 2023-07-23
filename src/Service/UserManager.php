@@ -5,19 +5,19 @@ namespace App\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
+use Symfony\Component\Uid\Uuid;
 
 class UserManager
 {
-    /** @var  UserPasswordEncoderInterface */
+    /** @var  UserPasswordHasherInterface */
     private $encoder;
 
     /** @var  EntityManagerInterface */
@@ -29,24 +29,25 @@ class UserManager
     /** @var  TokenStorageInterface */
     private $tokenStorage;
 
-    /** @var  SessionInterface */
-    private $session;
+    /** @var  RequestStack */
+    private $requestStack;
 
     /** @var  EventDispatcherInterface */
     private $eventDispatcher;
 
     public function __construct(
-        UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $em,
-        TokenStorageInterface $tokenStorage,
-        SessionInterface $session,
-        EventDispatcherInterface $eventDispatcher
-    ) {
+        UserPasswordHasherInterface $encoder,
+        EntityManagerInterface      $em,
+        TokenStorageInterface       $tokenStorage,
+        RequestStack                $requestStack,
+        EventDispatcherInterface    $eventDispatcher
+    )
+    {
         $this->encoder = $encoder;
         $this->em = $em;
         $this->repository = $em->getRepository(User::class);
         $this->tokenStorage = $tokenStorage;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -67,25 +68,6 @@ class UserManager
         return $user;
     }
 
-    public function createUser()
-    {
-        $uuid = Uuid::getFactory()->uuid4();
-
-        return new User($uuid);
-    }
-
-    public function update(User $user)
-    {
-        $password = $this->encoder->encodePassword($user, $user->getPlainPassword());
-        $user->setPassword($password);
-    }
-
-    public function save(User $user)
-    {
-        $this->em->persist($user);
-        $this->em->flush();
-    }
-
     public function register(array $data)
     {
         $user = $this->createUser();
@@ -97,13 +79,32 @@ class UserManager
         return $user;
     }
 
+    public function createUser()
+    {
+        $uuid = Uuid::v4();
+
+        return new User($uuid);
+    }
+
+    public function update(User $user)
+    {
+        $password = $this->encoder->hashPassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
+    }
+
+    public function save(User $user)
+    {
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
     public function login(User $user, Request $request)
     {
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
-        $this->session->set('_security_main', serialize($token));
+        $this->requestStack->getSession()->set('_security_main', serialize($token));
         $event = new InteractiveLoginEvent($request, $token);
-        $this->eventDispatcher->dispatch(SecurityEvents::INTERACTIVE_LOGIN, $event);
+        $this->eventDispatcher->dispatch($event, SecurityEvents::INTERACTIVE_LOGIN);
     }
 
     public function findByEmail($email)

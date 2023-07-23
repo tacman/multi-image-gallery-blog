@@ -3,23 +3,24 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @ORM\Table(name="users")
- * @ORM\Entity()
+ * @ORM\Entity
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @var Uuid
      *
      * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\Column(type=UuidType::NAME, unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\CustomIdGenerator(class="doctrine.ulid_generator")
      */
     public $id;
 
@@ -46,7 +47,7 @@ class User implements UserInterface, \Serializable
      */
     private $isActive;
 
-    public function __construct(UuidInterface $id)
+    public function __construct(Uuid $id)
     {
         $this->isActive = true;
         $this->id = $id;
@@ -62,43 +63,22 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
     public function getSalt()
     {
         return null;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
-    }
-
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
-    }
-
-    public function eraseCredentials()
-    {
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize([
-            $this->id,
-            $this->email,
-            $this->password,
-        ]);
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->email,
-            $this->password,
-            ) = unserialize($serialized);
     }
 
     /**
@@ -109,12 +89,9 @@ class User implements UserInterface, \Serializable
         $this->password = $password;
     }
 
-    /**
-     * @param mixed $email
-     */
-    public function setEmail($email)
+    public function getRoles(): array
     {
-        $this->email = $email;
+        return ['ROLE_USER'];
     }
 
     /**
@@ -125,12 +102,8 @@ class User implements UserInterface, \Serializable
         $this->roles = $roles;
     }
 
-    /**
-     * @param mixed $plainPassword
-     */
-    public function setPlainPassword($plainPassword)
+    public function eraseCredentials()
     {
-        $this->plainPassword = $plainPassword;
     }
 
     /**
@@ -141,4 +114,16 @@ class User implements UserInterface, \Serializable
         return $this->plainPassword;
     }
 
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 }

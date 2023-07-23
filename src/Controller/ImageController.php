@@ -6,13 +6,13 @@ use App\Entity\Image;
 use App\Service\FileManager;
 use App\Service\ImageResizer;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ImageController extends Controller
+class ImageController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $em;
