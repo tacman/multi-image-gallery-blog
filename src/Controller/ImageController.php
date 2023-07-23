@@ -47,7 +47,7 @@ class ImageController extends AbstractController
         return $this->renderRawImage($image);
     }
 
-    private function renderResizedImage(Image $image, int $size)
+    private function renderResizedImage(Image $image, int $size): Response
     {
         $fullPath = $this->fileManager->getFilePath($image->getFilename());
 
@@ -67,7 +67,7 @@ class ImageController extends AbstractController
         return $this->buildImageResponse($fullPath, 'placeholder.jpg', 1209600);
     }
 
-    private function buildImageResponse(string $path, string $filename, int $cacheTtl)
+    private function buildImageResponse(string $path, string $filename, int $cacheTtl): Response
     {
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-type', mime_content_type($path));

@@ -87,11 +87,9 @@ class EditImageController extends AbstractController
             return new RedirectResponse($this->router->generate('image.edit', ['id' => $image->getId()]));
         }
 
-        $view = $this->renderView('image/edit-image.html.twig', [
+        return $this->render('image/edit-image.html.twig', [
             'image' => $image,
             'form' => $form->createView(),
         ]);
-
-        return new Response($view);
     }
 }

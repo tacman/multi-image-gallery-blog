@@ -66,6 +66,9 @@ class Gallery
         $this->description = $description;
     }
 
+    /**
+     * @return Collection<int, Image>
+     */
     public function getImages(): Collection
     {
         return $this->images;

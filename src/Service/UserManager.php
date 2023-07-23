@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 use Symfony\Component\Uid\Uuid;
@@ -30,7 +31,7 @@ class UserManager
         $this->repository = $em->getRepository(User::class);
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(): ?User
     {
         $token = $this->tokenStorage->getToken();
 
@@ -58,26 +59,26 @@ class UserManager
         return $user;
     }
 
-    public function createUser()
+    public function createUser(): User
     {
         $uuid = Uuid::v7();
 
         return new User($uuid);
     }
 
-    public function update(User $user)
+    public function update(User $user): void
     {
         $password = $this->encoder->hashPassword($user, $user->getPlainPassword());
         $user->setPassword($password);
     }
 
-    public function save(User $user)
+    public function save(UserInterface $user): void
     {
         $this->em->persist($user);
         $this->em->flush();
     }
 
-    public function login(User $user, Request $request)
+    public function login(UserInterface $user, Request $request): void
     {
         $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
@@ -86,7 +87,7 @@ class UserManager
         $this->eventDispatcher->dispatch($event, SecurityEvents::INTERACTIVE_LOGIN);
     }
 
-    public function findByEmail($email)
+    public function findByEmail($email): UserInterface
     {
         return $this->repository->findOneBy(['email' => $email]);
     }

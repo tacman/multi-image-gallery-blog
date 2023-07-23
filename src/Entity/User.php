@@ -55,17 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    /**
-     * @param mixed $email
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-    }
-
-    public function getSalt()
-    {
-        return null;
     }
 
     public function getPassword(): ?string
@@ -73,10 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    /**
-     * @param mixed $password
-     */
-    public function setPassword($password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
@@ -89,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }
@@ -98,18 +87,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPlainPassword()
+    public function getPlainPassword(): string
     {
         return $this->plainPassword;
     }
 
-    /**
-     * @param mixed $plainPassword
-     */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword(string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }

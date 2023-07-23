@@ -30,9 +30,8 @@ class GalleryEventHandler
                 continue;
             }
 
-            $cachedPaths = [];
             foreach ($this->imageResizer->getSupportedWidths() as $width) {
-                $cachedPaths[$width] = $this->imageResizer->getResizedPath($fullPath, $width, true);
+                $this->imageResizer->getResizedPath($fullPath, $width, true);
             }
         }
     }

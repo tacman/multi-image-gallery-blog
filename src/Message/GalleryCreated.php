@@ -2,17 +2,15 @@
 
 namespace App\Message;
 
+use Symfony\Component\Uid\Uuid;
+
 class GalleryCreated
 {
-    /** @var  string */
-    private $galleryId;
-
-    public function __construct(string $galleryId)
+    public function __construct(private Uuid $galleryId)
     {
-        $this->galleryId = $galleryId;
     }
 
-    public function getGalleryId(): string
+    public function getGalleryId(): Uuid
     {
         return $this->galleryId;
     }

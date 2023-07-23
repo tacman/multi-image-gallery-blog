@@ -35,9 +35,7 @@ class UploadController extends AbstractController
      */
     public function renderUploadScreenAction(): Response
     {
-        $view = $this->renderView('gallery/upload.html.twig');
-
-        return new Response($view);
+        return $this->render('gallery/upload.html.twig');
     }
 
     /**

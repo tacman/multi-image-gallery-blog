@@ -36,34 +36,22 @@ class Image
         $this->filename = $filename;
     }
 
-    /**
-     * @return Uuid
-     */
-    public function getId()
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getOriginalFilename()
+    public function getOriginalFilename(): string
     {
         return $this->originalFilename;
     }
 
-    /**
-     * @param string $originalFilename
-     */
-    public function setOriginalFilename(string $originalFilename)
+    public function setOriginalFilename(string $originalFilename): void
     {
         $this->originalFilename = $originalFilename;
     }
 
-    /**
-     * @return string
-     */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -92,5 +80,4 @@ class Image
     {
         $this->gallery = $gallery;
     }
-
 }

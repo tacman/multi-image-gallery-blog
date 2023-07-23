@@ -83,11 +83,9 @@ class EditGalleryController extends AbstractController
             return new RedirectResponse($this->router->generate('gallery.edit', ['id' => $gallery->getId()]));
         }
 
-        $view = $this->renderView('gallery/edit-gallery.html.twig', [
+        return $this->render('gallery/edit-gallery.html.twig', [
             'gallery' => $gallery,
             'form' => $form->createView(),
         ]);
-
-        return new Response($view);
     }
 }

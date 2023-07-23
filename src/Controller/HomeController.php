@@ -24,11 +24,10 @@ class HomeController extends AbstractController
     public function homeAction(): Response
     {
         $galleries = $this->em->getRepository(Gallery::class)->findBy([], ['createdAt' => 'DESC'], self::PER_PAGE);
-        $view = $this->renderView('home.html.twig', [
+
+        return $this->render('home.html.twig', [
             'galleries' => $galleries,
         ]);
-
-        return new Response($view);
     }
 
     /**

@@ -32,11 +32,9 @@ class GalleryController extends AbstractController
             $canEdit = $gallery->isOwner($currentUser);
         }
 
-        $view = $this->renderView('gallery/single-gallery.html.twig', [
+        return $this->render('gallery/single-gallery.html.twig', [
             'gallery' => $gallery,
             'canEdit' => $canEdit,
         ]);
-
-        return new Response($view);
     }
 }
