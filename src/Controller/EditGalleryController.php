@@ -18,35 +18,19 @@ use Symfony\Component\Routing\RouterInterface;
 
 class EditGalleryController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var FormFactoryInterface */
-    private $formFactory;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var UserManager */
-    private $userManager;
-
     public function __construct(
-        EntityManagerInterface $em,
-        FormFactoryInterface   $formFactory,
-        RouterInterface        $router,
-        UserManager            $userManager
+        private EntityManagerInterface $em,
+        private FormFactoryInterface   $formFactory,
+        private RouterInterface        $router,
+        private UserManager            $userManager
     )
     {
-        $this->em = $em;
-        $this->formFactory = $formFactory;
-        $this->router = $router;
-        $this->userManager = $userManager;
     }
 
     /**
      * @Route("/gallery/{id}/delete", name="gallery.delete")
      */
-    public function deleteImageAction(Request $request, $id)
+    public function deleteImageAction($id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);
         if (empty($gallery)) {
@@ -69,7 +53,7 @@ class EditGalleryController extends AbstractController
     /**
      * @Route("/gallery/{id}/edit", name="gallery.edit")
      */
-    public function editGalleryAction(Request $request, $id)
+    public function editGalleryAction(Request $request, $id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);
         if (empty($gallery)) {
@@ -106,5 +90,4 @@ class EditGalleryController extends AbstractController
 
         return new Response($view);
     }
-
 }

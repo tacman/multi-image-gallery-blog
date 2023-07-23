@@ -10,12 +10,8 @@ use Twig\TwigFilter;
 
 class ImageRendererExtension extends AbstractExtension
 {
-    /** @var  RouterInterface */
-    private $router;
-
-    public function __construct(RouterInterface $router)
+    public function __construct(private RouterInterface $router)
     {
-        $this->router = $router;
     }
 
     public function getFilters()

@@ -9,14 +9,14 @@ use Twig\TwigFilter;
 class MarkdownExtension extends AbstractExtension
 {
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('markdown', [$this, 'renderMarkdownToHtml']),
         ];
     }
 
-    public function renderMarkdownToHtml($markdown)
+    public function renderMarkdownToHtml($markdown): string
     {
         $parsedown = new Parsedown();
 

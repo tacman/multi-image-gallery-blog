@@ -8,19 +8,11 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class AvailableEmailConstraintValidator extends ConstraintValidator
 {
-    /** @var  UserManager */
-    private $userManager;
-
-    /**
-     * AvailableEmailConstraintValidator constructor.
-     * @param UserManager $userManager
-     */
-    public function __construct(UserManager $userManager)
+    public function __construct(private UserManager $userManager)
     {
-        $this->userManager = $userManager;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (empty($value)) {
             return;

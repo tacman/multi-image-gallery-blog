@@ -12,22 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GalleryController extends AbstractController
 {
-    /** @var  EntityManagerInterface */
-    private $em;
-
-    /** @var  UserManager */
-    private $userManager;
-
-    public function __construct(EntityManagerInterface $em, UserManager $userManager)
+    public function __construct(private EntityManagerInterface $em, private UserManager $userManager)
     {
-        $this->em = $em;
-        $this->userManager = $userManager;
     }
 
     /**
      * @Route("/gallery/{id}", name="gallery.single-gallery")
      */
-    public function homeAction($id)
+    public function homeAction($id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);
         if (empty($gallery)) {
@@ -47,5 +39,4 @@ class GalleryController extends AbstractController
 
         return new Response($view);
     }
-
 }

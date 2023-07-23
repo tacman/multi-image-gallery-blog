@@ -6,34 +6,22 @@ use App\Entity\Image;
 use App\Service\FileManager;
 use App\Service\ImageResizer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var  FileManager */
-    private $fileManager;
-
-    /** @var  ImageResizer */
-    private $imageResizer;
-
-    public function __construct(EntityManagerInterface $em, FileManager $fileManager, ImageResizer $imageResizer)
+    public function __construct(private EntityManagerInterface $em, private FileManager $fileManager, private ImageResizer $imageResizer)
     {
-        $this->em = $em;
-        $this->fileManager = $fileManager;
-        $this->imageResizer = $imageResizer;
     }
 
     /**
      * @Route("/image/{id}/raw", name="image.serve")
      */
-    public function serveImageAction(Request $request, $id)
+    public function serveImageAction($id): Response
     {
         $idFragments = explode('--', $id);
         $id = $idFragments[0];
@@ -57,6 +45,26 @@ class ImageController extends AbstractController
         }
 
         return $this->renderRawImage($image);
+    }
+
+    private function renderResizedImage(Image $image, int $size)
+    {
+        $fullPath = $this->fileManager->getFilePath($image->getFilename());
+
+        try {
+            $fullPath = $this->imageResizer->getResizedPath($fullPath, $size);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException('Image not found');
+        }
+
+        // Image hasn't been resized yet, render placeholder without cache ttl
+        if (true === is_null($fullPath)) {
+            $fullPath = $this->fileManager->getPlaceholderImagePath();
+
+            return $this->buildImageResponse($fullPath, 'placeholder.jpg', -1);
+        }
+
+        return $this->buildImageResponse($fullPath, 'placeholder.jpg', 1209600);
     }
 
     private function buildImageResponse(string $path, string $filename, int $cacheTtl)
@@ -92,25 +100,4 @@ class ImageController extends AbstractController
 
         return $this->buildImageResponse($fullPath, $image->getOriginalFilename(), 1209600);
     }
-
-    private function renderResizedImage(Image $image, int $size)
-    {
-        $fullPath = $this->fileManager->getFilePath($image->getFilename());
-
-        try {
-            $fullPath = $this->imageResizer->getResizedPath($fullPath, $size);
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException('Image not found');
-        }
-
-        // Image hasn't been resized yet, render placeholder without cache ttl
-        if (true === is_null($fullPath)) {
-            $fullPath = $this->fileManager->getPlaceholderImagePath();
-
-            return $this->buildImageResponse($fullPath, 'placeholder.jpg', -1);
-        }
-
-        return $this->buildImageResponse($fullPath, 'placeholder.jpg', 1209600);
-    }
-
 }

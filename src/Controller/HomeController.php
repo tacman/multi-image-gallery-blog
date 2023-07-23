@@ -14,18 +14,14 @@ class HomeController extends AbstractController
 {
     const PER_PAGE = 12;
 
-    /** @var  EntityManagerInterface */
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /**
      * @Route("", name="home")
      */
-    public function homeAction()
+    public function homeAction(): Response
     {
         $galleries = $this->em->getRepository(Gallery::class)->findBy([], ['createdAt' => 'DESC'], self::PER_PAGE);
         $view = $this->renderView('home.html.twig', [
@@ -38,13 +34,13 @@ class HomeController extends AbstractController
     /**
      * @Route("/galleries-lazy-load", name="home.lazy-load")
      */
-    public function homeGalleriesLazyLoadAction(Request $request)
+    public function homeGalleriesLazyLoadAction(Request $request): Response
     {
         $page = $request->get('page', null);
         if (empty($page)) {
             return new JsonResponse([
                 'success' => false,
-                'msg'     => 'Page param is required',
+                'msg' => 'Page param is required',
             ]);
         }
 
@@ -57,9 +53,7 @@ class HomeController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'data'    => $view,
+            'data' => $view,
         ]);
     }
-
-
 }

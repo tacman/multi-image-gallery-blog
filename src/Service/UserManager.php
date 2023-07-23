@@ -17,38 +17,17 @@ use Symfony\Component\Uid\Uuid;
 
 class UserManager
 {
-    /** @var  UserPasswordHasherInterface */
-    private $encoder;
-
-    /** @var  EntityManagerInterface */
-    private $em;
-
-    /** @var  EntityRepository */
-    private $repository;
-
-    /** @var  TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var  RequestStack */
-    private $requestStack;
-
-    /** @var  EventDispatcherInterface */
-    private $eventDispatcher;
+    private EntityRepository $repository;
 
     public function __construct(
-        UserPasswordHasherInterface $encoder,
-        EntityManagerInterface      $em,
-        TokenStorageInterface       $tokenStorage,
-        RequestStack                $requestStack,
-        EventDispatcherInterface    $eventDispatcher
+        private UserPasswordHasherInterface $encoder,
+        private EntityManagerInterface      $em,
+        private TokenStorageInterface       $tokenStorage,
+        private RequestStack                $requestStack,
+        private EventDispatcherInterface    $eventDispatcher
     )
     {
-        $this->encoder = $encoder;
-        $this->em = $em;
         $this->repository = $em->getRepository(User::class);
-        $this->tokenStorage = $tokenStorage;
-        $this->requestStack = $requestStack;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getCurrentUser()

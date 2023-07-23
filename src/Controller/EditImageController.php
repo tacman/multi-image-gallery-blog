@@ -19,36 +19,20 @@ use Symfony\Component\Routing\RouterInterface;
 
 class EditImageController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /** @var  FormFactoryInterface */
-    private $formFactory;
-
-    /** @var  RouterInterface */
-    private $router;
-
-    /** @var  UserManager */
-    private $userManager;
-
     public function __construct(
-        EntityManagerInterface $em,
-        FormFactoryInterface   $formFactory,
-        RouterInterface        $router,
-        UserManager            $userManager
+        private EntityManagerInterface $em,
+        private FormFactoryInterface   $formFactory,
+        private RouterInterface        $router,
+        private UserManager            $userManager
     )
     {
-        $this->em = $em;
-        $this->formFactory = $formFactory;
-        $this->router = $router;
-        $this->userManager = $userManager;
     }
 
 
     /**
      * @Route("/image/{id}/delete", name="image.delete")
      */
-    public function deleteImageAction(Request $request, $id)
+    public function deleteImageAction($id): Response
     {
         $image = $this->em->getRepository(Image::class)->find($id);
         if (empty($image)) {
@@ -73,7 +57,7 @@ class EditImageController extends AbstractController
     /**
      * @Route("/image/{id}/edit", name="image.edit")
      */
-    public function editImageAction(Request $request, $id)
+    public function editImageAction(Request $request, $id): Response
     {
         $image = $this->em->getRepository(Image::class)->find($id);
         if (empty($image)) {
@@ -110,5 +94,4 @@ class EditImageController extends AbstractController
 
         return new Response($view);
     }
-
 }

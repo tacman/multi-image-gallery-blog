@@ -10,19 +10,11 @@ use Twig\TwigFunction;
 
 class SingleGalleryPageModulesTwigExtension extends AbstractExtension
 {
-    /** @var  Environment */
-    private $twig;
-
-    /** @var  GalleryRepository */
-    private $repository;
-
-    public function __construct(Environment $twig, GalleryRepository $repository)
+    public function __construct(private Environment $twig, private GalleryRepository $repository)
     {
-        $this->twig = $twig;
-        $this->repository = $repository;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('renderRelatedGalleries', [$this, 'renderRelatedGalleries'], ['is_safe' => ['html']]),

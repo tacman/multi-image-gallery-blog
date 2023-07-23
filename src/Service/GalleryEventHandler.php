@@ -10,20 +10,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class GalleryEventHandler
 {
-    /** @var  EntityManagerInterface */
-    private $entityManager;
-
-    /** @var FileManager */
-    private $fileManager;
-
-    /** @var $imageResizer */
-    private $imageResizer;
-
-    public function __construct(EntityManagerInterface $entityManager, FileManager $fileManager, ImageResizer $imageResizer)
+    public function __construct(private EntityManagerInterface $entityManager, private FileManager $fileManager, private ImageResizer $imageResizer)
     {
-        $this->entityManager = $entityManager;
-        $this->fileManager = $fileManager;
-        $this->imageResizer = $imageResizer;
     }
 
     public function __invoke(GalleryCreated $event): void
@@ -35,7 +23,6 @@ class GalleryEventHandler
         if (empty($gallery)) {
             return;
         }
-
 
         foreach ($gallery->getImages() as $image) {
             $fullPath = $this->fileManager->getFilePath($image->getFilename());

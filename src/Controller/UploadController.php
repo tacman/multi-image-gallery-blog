@@ -20,40 +20,20 @@ use Symfony\Component\Uid\Uuid;
 
 class UploadController extends AbstractController
 {
-    /** @var  RouterInterface */
-    private $router;
-
-    /** @var FileManager */
-    private $fileManager;
-
-    /** @var  EntityManagerInterface */
-    private $em;
-
-    /** @var  UserManager */
-    private $userManager;
-
-    /** @var  MessageBusInterface */
-    private $bus;
-
     public function __construct(
-        RouterInterface        $router,
-        FileManager            $fileManager,
-        EntityManagerInterface $em,
-        UserManager            $userManager,
-        MessageBusInterface    $bus
+        private RouterInterface        $router,
+        private FileManager            $fileManager,
+        private EntityManagerInterface $em,
+        private UserManager            $userManager,
+        private MessageBusInterface    $bus
     )
     {
-        $this->router = $router;
-        $this->fileManager = $fileManager;
-        $this->em = $em;
-        $this->userManager = $userManager;
-        $this->bus = $bus;
     }
 
     /**
      * @Route("/private/upload", name="upload")
      */
-    public function renderUploadScreenAction(Request $request)
+    public function renderUploadScreenAction(): Response
     {
         $view = $this->renderView('gallery/upload.html.twig');
 
@@ -63,7 +43,7 @@ class UploadController extends AbstractController
     /**
      * @Route("/private/upload-process", name="upload.process")
      */
-    public function processUploadAction(Request $request)
+    public function processUploadAction(Request $request): Response
     {
         // @todo access control
         // @todo input validation
@@ -106,5 +86,4 @@ class UploadController extends AbstractController
             ),
         ]);
     }
-
 }

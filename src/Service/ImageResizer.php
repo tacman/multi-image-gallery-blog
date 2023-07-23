@@ -6,41 +6,19 @@ use League\Glide;
 
 class ImageResizer
 {
-    private $server;
-
     const SIZE_1120 = 1120;
     const SIZE_720 = 720;
     const SIZE_400 = 400;
     const SIZE_250 = 250;
-
     const CACHE_DIR = 'cache';
+    private Glide\Server $server;
 
     public function __construct(FileManager $fm)
     {
-        $this->server = $server = Glide\ServerFactory::create([
+        $this->server = Glide\ServerFactory::create([
             'source' => $fm->getUploadsDirectory(),
-            'cache'  => $fm->getUploadsDirectory() . '/' . self::CACHE_DIR,
+            'cache' => $fm->getUploadsDirectory() . '/' . self::CACHE_DIR,
         ]);
-    }
-
-    private function getGlide()
-    {
-        return $this->server;
-    }
-
-    public function getSupportedWidths()
-    {
-        return [
-            self::SIZE_1120,
-            self::SIZE_720,
-            self::SIZE_400,
-            self::SIZE_250,
-        ];
-    }
-
-    public function isSupportedSize(int $size)
-    {
-        return in_array($size, $this->getSupportedWidths());
     }
 
     public function getResizedPath(string $fullPath, int $size, $resizeIfDoesntExist = false)
@@ -77,6 +55,26 @@ class ImageResizer
         }
 
         return null;
+    }
+
+    public function isSupportedSize(int $size)
+    {
+        return in_array($size, $this->getSupportedWidths());
+    }
+
+    public function getSupportedWidths()
+    {
+        return [
+            self::SIZE_1120,
+            self::SIZE_720,
+            self::SIZE_400,
+            self::SIZE_250,
+        ];
+    }
+
+    private function getGlide(): Glide\Server
+    {
+        return $this->server;
     }
 
 }

@@ -15,30 +15,18 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RegistrationController extends AbstractController
 {
-    /** @var  FormFactoryInterface */
-    private $formFactory;
-
-    /** @var  RouterInterface */
-    private $router;
-
-    /** @var UserManager */
-    private $userManager;
-
     public function __construct(
-        FormFactoryInterface $formFactory,
-        RouterInterface      $router,
-        UserManager          $userManager
+        private FormFactoryInterface $formFactory,
+        private RouterInterface      $router,
+        private UserManager          $userManager
     )
     {
-        $this->formFactory = $formFactory;
-        $this->router = $router;
-        $this->userManager = $userManager;
     }
 
     /**
      * @Route("/register", name="register")
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request): Response
     {
         $form = $this->createRegistrationForm($request);
 
@@ -70,5 +58,4 @@ class RegistrationController extends AbstractController
 
         return new RedirectResponse($this->router->generate('home'));
     }
-
 }

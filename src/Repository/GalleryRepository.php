@@ -8,8 +8,7 @@ use Doctrine\ORM\EntityRepository;
 
 class GalleryRepository
 {
-    /** @var  EntityRepository */
-    private $repository;
+    private EntityRepository $repository;
 
     public function __construct(EntityManagerInterface $em)
     {
