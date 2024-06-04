@@ -8,9 +8,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route("/login", name="login")
-     */
+    #[Route(path: '/login', name: 'login')]
     public function loginAction(AuthenticationUtils $authUtils)
     {
         // get the login error if there is one
@@ -25,10 +23,8 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/logout", name="logout")
-     */
-    public function logoutAction()
+    #[Route(path: '/logout', name: 'logout')]
+    public function logoutAction(): void
     {
         // Stub used only for generating routes
     }

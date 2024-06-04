@@ -15,7 +15,7 @@ class SmokeTest extends WebTestCase
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPageIsSuccessful($url): void
     {
         $client = self::createClient();
         $client->request('GET', $url);

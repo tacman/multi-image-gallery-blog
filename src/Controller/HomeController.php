@@ -18,9 +18,7 @@ class HomeController extends AbstractController
     {
     }
 
-    /**
-     * @Route("", name="home")
-     */
+    #[Route(path: '', name: 'home')]
     public function homeAction(): Response
     {
         $galleries = $this->em->getRepository(Gallery::class)->findBy([], ['createdAt' => 'DESC'], self::PER_PAGE);
@@ -30,9 +28,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/galleries-lazy-load", name="home.lazy-load")
-     */
+    #[Route(path: '/galleries-lazy-load', name: 'home.lazy-load')]
     public function homeGalleriesLazyLoadAction(Request $request): Response
     {
         $page = $request->get('page', null);

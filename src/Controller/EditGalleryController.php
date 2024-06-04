@@ -27,9 +27,7 @@ class EditGalleryController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/gallery/{id}/delete", name="gallery.delete")
-     */
+    #[Route(path: '/gallery/{id}/delete', name: 'gallery.delete')]
     public function deleteImageAction($id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);
@@ -50,9 +48,7 @@ class EditGalleryController extends AbstractController
         return new RedirectResponse($this->router->generate('home'));
     }
 
-    /**
-     * @Route("/gallery/{id}/edit", name="gallery.edit")
-     */
+    #[Route(path: '/gallery/{id}/edit', name: 'gallery.edit')]
     public function editGalleryAction(Request $request, $id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);

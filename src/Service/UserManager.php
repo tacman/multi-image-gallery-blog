@@ -87,7 +87,7 @@ class UserManager
         $this->eventDispatcher->dispatch($event, SecurityEvents::INTERACTIVE_LOGIN);
     }
 
-    public function findByEmail($email): UserInterface
+    public function findByEmail($email): ?UserInterface
     {
         return $this->repository->findOneBy(['email' => $email]);
     }

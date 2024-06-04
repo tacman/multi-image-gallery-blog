@@ -30,17 +30,13 @@ class UploadController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/private/upload", name="upload")
-     */
+    #[Route(path: '/private/upload', name: 'upload')]
     public function renderUploadScreenAction(): Response
     {
         return $this->render('gallery/upload.html.twig');
     }
 
-    /**
-     * @Route("/private/upload-process", name="upload.process")
-     */
+    #[Route(path: '/private/upload-process', name: 'upload.process')]
     public function processUploadAction(Request $request): Response
     {
         // @todo access control

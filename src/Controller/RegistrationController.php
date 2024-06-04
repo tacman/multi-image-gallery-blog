@@ -23,9 +23,7 @@ class RegistrationController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/register", name="register")
-     */
+    #[Route(path: '/register', name: 'register')]
     public function registerAction(Request $request): Response
     {
         $form = $this->createRegistrationForm($request);

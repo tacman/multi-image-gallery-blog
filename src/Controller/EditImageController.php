@@ -29,9 +29,7 @@ class EditImageController extends AbstractController
     }
 
 
-    /**
-     * @Route("/image/{id}/delete", name="image.delete")
-     */
+    #[Route(path: '/image/{id}/delete', name: 'image.delete')]
     public function deleteImageAction($id): Response
     {
         $image = $this->em->getRepository(Image::class)->find($id);
@@ -54,9 +52,7 @@ class EditImageController extends AbstractController
         return new RedirectResponse($this->router->generate('gallery.single-gallery', ['id' => $gallery->getId()]));
     }
 
-    /**
-     * @Route("/image/{id}/edit", name="image.edit")
-     */
+    #[Route(path: '/image/{id}/edit', name: 'image.edit')]
     public function editImageAction(Request $request, $id): Response
     {
         $image = $this->em->getRepository(Image::class)->find($id);

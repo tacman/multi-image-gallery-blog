@@ -16,9 +16,7 @@ class GalleryController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/gallery/{id}", name="gallery.single-gallery")
-     */
+    #[Route(path: '/gallery/{id}', name: 'gallery.single-gallery')]
     public function homeAction($id): Response
     {
         $gallery = $this->em->getRepository(Gallery::class)->find($id);

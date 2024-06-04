@@ -18,9 +18,7 @@ class ImageController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/image/{id}/raw", name="image.serve")
-     */
+    #[Route(path: '/image/{id}/raw', name: 'image.serve')]
     public function serveImageAction($id): Response
     {
         $idFragments = explode('--', $id);
