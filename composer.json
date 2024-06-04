@@ -24,6 +24,7 @@
         "symfony/yaml": "^6.2"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
         "rector/rector": "*",
         "symfony/dotenv": "^6.2",
         "symfony/flex": "^2.2",
