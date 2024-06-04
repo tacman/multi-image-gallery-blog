@@ -38,8 +38,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private Collection $galleries;
 
-    public function __construct(Uuid $id)
+    public function __construct(Uuid $id=null)
     {
+        if (!$id) {
+            $id = Uuid::v7();
+        }
         $this->galleries = new ArrayCollection();
         $this->isActive = true;
         $this->id = $id;
@@ -72,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
     /**

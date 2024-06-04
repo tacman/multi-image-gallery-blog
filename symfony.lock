@@ -36,7 +36,16 @@
         "version": "1.3.x-dev"
     },
     "doctrine/doctrine-fixtures-bundle": {
-        "version": "2.4.x-dev"
+        "version": "3.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
+        ]
     },
     "doctrine/doctrine-migrations-bundle": {
         "version": "1.2",
@@ -76,6 +85,18 @@
     },
     "jdorn/sql-formatter": {
         "version": "1.3.x-dev"
+    },
+    "knpuniversity/oauth2-client-bundle": {
+        "version": "2.18",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.20",
+            "ref": "1ff300d8c030f55c99219cc55050b97a695af3f6"
+        },
+        "files": [
+            "config/packages/knpu_oauth2_client.yaml"
+        ]
     },
     "league/flysystem": {
         "version": "1.1-dev"
@@ -224,6 +245,9 @@
             "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
         }
     },
+    "survos/auth-bundle": {
+        "version": "1.5.238"
+    },
     "symfony/asset": {
         "version": "3.4.x-dev"
     },
@@ -304,6 +328,15 @@
     },
     "symfony/intl": {
         "version": "4.1-dev"
+    },
+    "symfony/maker-bundle": {
+        "version": "1.59",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
     },
     "symfony/messenger": {
         "version": "6.3",
